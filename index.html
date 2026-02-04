@@ -66,8 +66,8 @@
 
     <div class="section-title">ใส่ค่า (X, HKP+X, HPHK)</div>
     <div class="input-group">
-        <label>X (ระยะลิฟต์จอดไม่เสมอชั้น *ค่าต้องไม่เป็น 0)</label>
-        <input type="number" id="X" placeholder="mm" oninput="calculate()">
+        <label>X (ระยะลิฟต์จอดไม่เสมอชั้น วัดระยะจากซิลประตูในถึงซิลประตูนอก)</label>
+        <input type="number" id="X" placeholder="ค่าต้องไม่เป็น 0 ลิฟท์ต้องไม่Normalเสมอชั้น)" oninput="calculate()">
     </div>
     <div class="input-group">
         <label>HKP + X (ระยะจากบัฟเฟอร์ถึงเพลทใต้ตู้ลิฟต์)</label>
@@ -79,22 +79,22 @@
     </div>
 
     <div class="section-title">ระยะปลอดภัย (Safety Clearance)</div>
-    <div class="input-group"><label>A (ระยะขอบกระบังซิลประตูในถึงผนังปล่อง)</label><input type="number" id="A" oninput="calculate()"></div>
-    <div class="input-group"><label>E (จาก Guide shoe/Roller ถึงพื้นบ่อ)</label><input type="number" id="E" placeholder="mm" oninput="calculate()"></div>
-    <div class="input-group"><label>F (จากขอบกระบังซิลประตูในถึงพื้นบ่อ)</label><input type="number" id="F" placeholder="mm" oninput="calculate()"></div>
-    <div class="input-group"><label>G (ส่วนที่ต่ำที่สุดของพื้นตู้ลิฟต์ถึงพื้นบ่อ)</label><input type="number" id="G" placeholder="mm" oninput="calculate()"></div>
+    <div class="input-group"><label>A (ระยะจากขอบกระบังซิลประตูในวัดถึงผนังปล่องหรือที่กั้นหน้าปล่อง)</label><input type="number" id="A" placeholder="mm" oninput="calculate()"></div>
+    <div class="input-group"><label>E (ระยะจาก Guide shoeหรือRollerใต้ตู้ลิฟต์วัดถึงพื้นบ่อหรือส่วนที่จะชน)</label><input type="number" id="E" placeholder="mm" oninput="calculate()"></div>
+    <div class="input-group"><label>F (ระยะจากขอบกระบังซิลประตูในวัดถึงพื้นบ่อหรือส่วนที่จะชน)</label><input type="number" id="F" placeholder="mm" oninput="calculate()"></div>
+    <div class="input-group"><label>G (ระยะจากส่วนที่ต่ำที่สุดของพื้นตู้ลิฟต์วัดถึงพื้นบ่อหรือส่วนที่จะชน)</label><input type="number" id="G" placeholder="mm" oninput="calculate()"></div>
 
     <div class="result-panel">
         <div class="res-item">
             <div class="res-header">
-                <span class="res-label">HKP (เป้าหมาย 0/-5 mm):</span>
+                <span class="res-label">HKP (ระยะรันบายลิฟต์ตามแบบติดตั้ง และต่างกันไม่เกิน5mm):</span>
                 <span class="res-value" id="outHKP">-</span>
             </div>
         </div>
 
         <div class="res-item">
             <div class="res-header">
-                <span class="res-label">Total Y (HKPX + HPHK):</span>
+                <span class="res-label">Total Y (HKP+X+HPHK):</span>
                 <span class="res-value" id="outY">-</span>
             </div>
         </div>
@@ -123,7 +123,7 @@
         </div>
 
         <div class="analysis-box" id="analysisBox">
-            <div class="analysis-title">วิเคราะห์ความปลอดภัยระยะ A (Guarding):</div>
+            <div class="analysis-title">วิเคราะห์ความปลอดภัยระยะ A (ระยะจากกระบังซิลประตูในถึงผนังปล่องหรือที่กั้นหน้าปล่อง):</div>
             <div id="guardResult" class="analysis-text">รอข้อมูลการคำนวณ...</div>
         </div>
     </div>
@@ -133,10 +133,16 @@
         <ul>
             <li>HKP รันบายลิฟต์ตามแบบติดตั้ง (0/-5 mm)</li>
             <li>E-Y ≥ 300 mm | G-Y ≥ 500 mm</li>
-            <li>Guarding: วิเคราะห์ตามระยะ A และ F-Y</li>
+            <li>ทำที่กั้นหน้าปล่อง วิเคราะห์ตามระยะ A และ F-Y</li>
         </ul>
     </div>
+
+    <div class="diagram-container">
+        <img src="image/layout-f.jpeg" alt="f Layout Diagram">
+    </div>
 </div>
+
+    
 
 <script>
 function calculate() {
@@ -185,12 +191,12 @@ function calculate() {
     } else {
         // กรณีที่ 1: ถ้า F-Y สูงพออยู่แล้ว (>= 500)
         if (fy >= 500) {
-            guardMsg = "✅ ระยะ A ยอมรับได้เลย<br><span style='font-size:0.85rem; color:#666;'>(ไม่ต้องทำที่กั้นหน้าปล่อง)</span>";
+            guardMsg = "✅ ระยะ A ผ่าน<br><span style='font-size:0.85rem; color:#666;'>(ไม่ต้องทำที่กั้นหน้าปล่อง)</span>";
         } 
         // กรณีที่ 2: ถ้า F-Y อยู่ระหว่าง 100 - 499
         else if (fy >= 100) {
             if (a <= 150) {
-                guardMsg = "✅ ระยะ A ปลอดภัย<br><span style='font-size:0.85rem; color:#666;'>(จะต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y < 500)</span>";
+                guardMsg = "✅ ระยะ A ผ่าน<br><span style='font-size:0.85rem; color:#666;'>(จะต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y < 500)</span>";
             } else {
                 guardMsg = "⚠️ ต้องทำที่กั้นหน้าปล่อง<br><span style='font-size:0.85rem; color:#e00000;'>เพื่อให้ระยะ A ≤ 150 mm</span>";
                 statusClass = "fail";
