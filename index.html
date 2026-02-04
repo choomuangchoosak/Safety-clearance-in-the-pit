@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schindler Pit Inspector Pro - Full Suite</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 15px; background-color: #f0f2f5; color: #333; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 600px; margin: auto; border-top: 6px solid #e00000; }
+        h2 { color: #e00000; font-size: 1.4rem; border-bottom: 3px solid #e00000; padding-bottom: 10px; margin-top: 0; display: flex; justify-content: space-between; align-items: center; }
+        .version { font-size: 0.7rem; color: #666; font-weight: normal; }
+        
+        .diagram-container { text-align: center; margin: 15px 0; background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 8px; }
+        .diagram-container img { max-width: 100%; height: auto; border-radius: 4px; }
+        
+        .section-title { font-size: 0.9rem; font-weight: bold; color: #e00000; margin: 20px 0 10px 0; display: flex; align-items: center; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: #ddd; margin-left: 10px; }
+
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .input-group { margin-bottom: 5px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.8rem; color: #555; }
+        input { width: 100%; padding: 10px; border: 2px solid #eee; border-radius: 6px; box-sizing: border-box; transition: 0.3s; font-size: 1rem; }
+        input:focus { border-color: #e00000; outline: none; background: #fff8f8; }
+
+        .result-panel { background: #1a1a1a; color: #fff; padding: 20px; border-radius: 8px; margin-top: 20px; transition: 0.3s; }
+        .res-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #333; }
+        .res-label { font-size: 0.9rem; color: #bbb; }
+        .res-val { font-weight: bold; font-family: monospace; font-size: 1.1rem; }
+        
+        .margin-tag { font-size: 0.75rem; margin-left: 10px; padding: 2px 6px; border-radius: 4px; font-family: sans-serif; }
+        .pass { color: #4ade80; }
+        .fail { color: #ff4d4d; }
+        .pass-bg { background: rgba(74, 222, 128, 0.15); }
+        .fail-bg { background: rgba(255, 77, 77, 0.15); }
+
+        .analysis-card { background: #fff; color: #333; padding: 15px; border-radius: 8px; margin-top: 15px; border: 2px solid #ddd; transition: 0.3s; }
+        .analysis-title { font-weight: bold; font-size: 0.85rem; margin-bottom: 5px; color: #666; }
+        .analysis-text { font-size: 1.1rem; font-weight: bold; }
+
+        .formula-info { font-size: 0.75rem; color: #888; margin-top: 20px; line-height: 1.4; background: #f9f9f9; padding: 15px; border-radius: 5px; border: 1px solid #eee; }
+        .bg-fail-panel { border-left: 6px solid #ff4d4d; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>
+        ES1/ES5.0 Pit Analyzer 
+        <span class="version">Rel. 02 EN 81-1</span>
+    </h2>
+
+    <div class="diagram-container">
+        <img src="image/layout-pit.jpeg" alt="Pit Layout Diagram">
+        <p style="font-size: 0.65rem; color: #999;">Ref: Layout Drawing (HKP, X, E, G)</p>
+    </div>
+
+    <div class="section-title">PRIMARY DATA</div>
+    <div class="grid-inputs">
+        <div class="input-group">
+            <label>HKP + X (Measured)</label>
+            <input type="number" id="HKPX" placeholder="เช่น 337" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>X (Offset)</label>
+            <input type="number" id="X" placeholder="เช่น 272" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>HPH (Buffer Stroke)</label>
+            <input type="number" id="HPH" placeholder="เช่น 173.5" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>HSG (Layout Depth)</label>
+            <input type="number" id="HSG" placeholder="mm" oninput="calculate()">
+        </div>
+    </div>
+
+    <div class="section-title">SAFETY CLEARANCE (E, F, G, A)</div>
+    <div class="grid-inputs">
+        <div class="input-group">
+            <label>A (Apron to Wall)</label>
+            <input type="number" id="A" placeholder="mm" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>E (Highest Part)</label>
+            <input type="number" id="E" placeholder="เช่น 1236" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>F (Floor to Apron)</label>
+            <input type="number" id="F" placeholder="เช่น 1178" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>G (Lowest Part)</label>
+            <input type="number" id="G" placeholder="เช่น 1559" oninput="calculate()">
+        </div>
+    </div>
+
+    <div class="result-panel" id="resPanel">
+        <div class="res-row">
+            <span class="res-label">HKP (Real Distance):</span>
+            <span class="res-val" id="outHKP">-</span>
+        </div>
+        <div class="res-row">
+            <span class="res-label">Total Y (HKPX + HPH):</span>
+            <span class="res-val" id="outY">-</span>
+        </div>
+        <div class="res-row">
+            <span class="res-label">E - Y (Limit ≥ 300):</span>
+            <div>
+                <span class="res-val" id="outEY">-</span>
+                <span id="mE" class="margin-tag"></span>
+            </div>
+        </div>
+        <div class="res-row">
+            <span class="res-label">F - Y (Variable):</span>
+            <div>
+                <span class="res-val" id="outFY">-</span>
+                <span id="mF" class="margin-tag"></span>
+            </div>
+        </div>
+        <div class="res-row">
+            <span class="res-label">G - Y (Limit ≥ 500):</span>
+            <div>
+                <span class="res-val" id="outGY">-</span>
+                <span id="mG" class="margin-tag"></span>
+            </div>
+        </div>
+
+        <div class="analysis-card" id="guardCard">
+            <div class="analysis-title">วิเคราะห์ที่กั้นหน้าปล่อง (Guarding):</div>
+            <div id="guardResult" class="analysis-text">รอข้อมูล...</div>
+        </div>
+    </div>
+
+    <div class="formula-info">
+        <strong>สูตรและการวิเคราะห์ตาม EN 81-1:</strong><br>
+        1. <strong>HKP</strong> = (HKP+X) - X (เกณฑ์ 0/-5 mm เทียบ HSG)<br>
+        2. <strong>Total Y</strong> = (HKP+X) + HPH (ระยะยุบตัวสุด)<br>
+        3. <strong>E - Y</strong> ≥ 300 mm และ <strong>G - Y</strong> ≥ 500 mm<br>
+        4. <strong>F - Y (Guarding):</strong><br>
+        &nbsp;&nbsp;&nbsp;- A > 150 (F-Y ≥ 500): ไม่ต้องทำที่กั้นหน้าปล่อง<br>
+        &nbsp;&nbsp;&nbsp;- A ≤ 150 (F-Y ≥ 100/30): จะต้องทำที่กั้นหน้าปล่อง
+    </div>
+
+    <div class="diagram-container">
+        <img src="image/layout-f.jpeg" alt="F dimension details">
+        <p style="font-size: 0.65rem; color: #999;">Ref: Detail of A and F dimension</p>
+    </div>
+</div>
+
+<script>
+function calculate() {
+    const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
+    
+    const hkpx = getVal('HKPX');
+    const x = getVal('X');
+    const hph = getVal('HPH');
+    const a = getVal('A');
+    const e = getVal('E');
+    const f = getVal('F');
+    const g = getVal('G');
+
+    // คำนวณพื้นฐาน
+    const hkp = hkpx - x;
+    const y = hkpx + hph;
+    const ey = e - y;
+    const fy = f - y;
+    const gy = g - y;
+
+    // แสดงผลทั่วไป
+    document.getElementById('outHKP').innerText = hkp.toFixed(1) + " mm";
+    document.getElementById('outY').innerText = y.toFixed(1) + " mm";
+
+    // ฟังก์ชันช่วยแสดงผล Pass/Fail และ Margin
+    const updateUI = (val, target, outId, mId) => {
+        const el = document.getElementById(outId);
+        const mEl = document.getElementById(mId);
+        const isPass = val >= target;
+        const diff = val - target;
+        
+        el.innerText = val.toFixed(1);
+        el.className = isPass ? "res-val pass" : "res-val fail";
+        
+        mEl.innerText = isPass ? `+${diff.toFixed(1)}` : `ขาด ${Math.abs(diff).toFixed(1)}`;
+        mEl.className = isPass ? "margin-tag pass-bg pass" : "margin-tag fail-bg fail";
+        return isPass;
+    };
+
+    // ตรวจสอบ E และ G
+    const okE = updateUI(ey, 300, 'outEY', 'mE');
+    const okG = updateUI(gy, 500, 'outGY', 'mG');
+
+    // วิเคราะห์ F-Y และ Guarding ตามค่า A
+    let fTarget = 30;
+    let guardText = "";
+    if (a > 150) {
+        fTarget = 500;
+        guardText = (fy >= 500) ? "ไม่ต้องทำที่กั้นหน้าปล่อง" : "FAIL: F-Y ไม่พอ (ต้องการ 500)";
+    } else if (a > 35) {
+        fTarget = 100;
+        guardText = (fy >= 100) ? "จะต้องทำที่กั้นหน้าปล่อง" : "FAIL: F-Y ไม่พอ (ต้องการ 100)";
+    } else {
+        fTarget = 30;
+        guardText = (fy >= 30) ? "จะต้องทำที่กั้นหน้าปล่อง" : "FAIL: F-Y ไม่พอ (ต้องการ 30)";
+    }
+
+    const okF = updateUI(fy, fTarget, 'outFY', 'mF');
+    const guardEl = document.getElementById('guardResult');
+    const guardCard = document.getElementById('guardCard');
+    
+    guardEl.innerText = (hkpx === 0) ? "รอข้อมูล..." : guardText;
+    guardEl.className = okF ? "analysis-text pass" : "analysis-text fail";
+    guardCard.style.borderColor = okF ? "#ddd" : "#ff4d4d";
+
+    // Highlight Panel ถ้ามีจุดใดจุดหนึ่งไม่ผ่าน
+    const panel = document.getElementById('resPanel');
+    if (!okE || !okG || !okF) {
+        panel.classList.add('bg-fail-panel');
+    } else {
+        panel.classList.remove('bg-fail-panel');
+    }
+}
+</script>
+
+</body>
+</html>
