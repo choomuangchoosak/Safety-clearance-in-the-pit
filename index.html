@@ -3,145 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safety clearance in the Pit </title>
+    <title>Schindler Pit Analyzer - Pro Mobile</title>
     <style>
-        /* Base Setup */
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 10px; background-color: #f0f2f5; color: #333; }
+        body { font-family: -apple-system, system-ui, sans-serif; padding: 10px; background-color: #f4f6f9; color: #333; }
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 500px; margin: auto; border-top: 8px solid #e00000; }
         
-        h2 { color: #e00000; font-size: 1.5rem; border-bottom: 3px solid #e00000; padding-bottom: 10px; margin-top: 0; }
-        .version { font-size: 0.8rem; color: #666; font-weight: normal; display: block; }
+        h2 { color: #e00000; font-size: 1.4rem; border-bottom: 2px solid #e00000; padding-bottom: 10px; margin-top: 0; }
+        .version { font-size: 0.8rem; color: #666; font-weight: normal; }
         
-        /* Diagram Container */
         .diagram-container { text-align: center; margin: 15px 0; background: #fff; border: 1px solid #ddd; padding: 5px; border-radius: 8px; }
         .diagram-container img { max-width: 100%; height: auto; border-radius: 4px; }
         
-        /* Section Titles */
-        .section-title { font-size: 1rem; font-weight: bold; color: #e00000; margin: 25px 0 15px 0; background: #f8f8f8; padding: 8px; border-radius: 4px; border-left: 4px solid #e00000; }
+        .section-title { font-size: 0.95rem; font-weight: bold; color: #e00000; margin: 20px 0 10px 0; border-left: 4px solid #e00000; padding-left: 10px; background: #fdf2f2; padding-top: 5px; padding-bottom: 5px; }
 
-        /* Input Layout - ขยายให้เรียงแถวละ 1 ช่องสำหรับมือถือ */
-        .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 1.1rem; color: #444; }
+        /* ปรับ Input ให้เรียงแถวเดียวและใหญ่ขึ้น */
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 1rem; color: #555; }
         input { 
             width: 100%; 
-            padding: 15px; /* เพิ่มพื้นที่ให้กดง่าย */
-            border: 2px solid #ccc; 
+            padding: 12px; 
+            border: 2px solid #ddd; 
             border-radius: 8px; 
             box-sizing: border-box; 
-            font-size: 1.2rem; /* ตัวเลขใหญ่ขึ้น */
+            font-size: 1.1rem; 
             background: #fff;
-            -webkit-appearance: none; /* ลบเงาใน iOS */
+            appearance: none;
         }
-        input:focus { border-color: #e00000; outline: none; background: #fff8f8; border-width: 3px; }
+        input:focus { border-color: #e00000; outline: none; background: #fff8f8; }
 
-        /* Result Panel */
-        .result-panel { background: #1a1a1a; color: #fff; padding: 20px; border-radius: 10px; margin-top: 25px; }
-        .res-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #333; }
-        .res-label { font-size: 1rem; color: #bbb; }
-        .res-val { font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.4rem; }
-        
-        .margin-tag { font-size: 0.9rem; margin-top: 5px; display: block; text-align: right; }
+        /* ผลลัพธ์แบบแยกทีละบรรทัด */
+        .result-panel { background: #1a1a1a; color: #fff; padding: 15px; border-radius: 10px; margin-top: 20px; }
+        .res-item { 
+            display: block; 
+            margin-bottom: 15px; 
+            padding-bottom: 10px; 
+            border-bottom: 1px solid #333; 
+        }
+        .res-header { display: flex; justify-content: space-between; align-items: center; }
+        .res-label { font-size: 0.9rem; color: #aaa; }
+        .res-value { font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.3rem; color: #fff; }
+        .res-footer { display: flex; justify-content: flex-end; margin-top: 4px; }
+
+        .tag { font-size: 0.85rem; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
         .pass { color: #4ade80; }
         .fail { color: #ff4d4d; }
+        .pass-tag { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+        .fail-tag { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; }
 
-        /* Analysis Box */
-        .analysis-card { background: #fff; color: #333; padding: 15px; border-radius: 8px; margin-top: 15px; border: 3px solid #ddd; }
-        .analysis-text { font-size: 1.2rem; font-weight: bold; line-height: 1.4; }
+        /* กล่องวิเคราะห์พิเศษ */
+        .analysis-box { background: #fff; color: #333; padding: 15px; border-radius: 8px; margin-top: 15px; border: 2px solid #eee; text-align: center; }
+        .analysis-text { font-size: 1.1rem; font-weight: bold; }
 
-        .formula-info { font-size: 0.85rem; color: #777; margin-top: 25px; background: #fff; padding: 15px; border: 1px dashed #ccc; border-radius: 8px; }
-
-        /* สำหรับหน้าจอคอมพิวเตอร์ ให้กลับเป็น 2 คอลัมน์เพื่อความสวยงาม */
-        @media (min-width: 480px) {
-            .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        }
+        .formula-info { font-size: 0.8rem; color: #888; margin-top: 20px; background: #fff; padding: 10px; border: 1px dashed #ccc; border-radius: 6px; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>
-     Safety clearance in the Pit 
-        <span class="version">ES1/ES5.0/ES5 Rel. 02 EN 81-1</span>
-    </h2>
+    <h2>ES1/ES5.0 Pit Analyzer <span class="version">Rel. 02 EN 81-1</span></h2>
 
     <div class="diagram-container">
-        <img src="image/layout-pit.jpeg" alt="layout-pit.jpeg">
+        <img src="image/layout-pit.jpeg" alt="Pit Layout Diagram">
     </div>
 
-    <div class="section-title">PRIMARY DATA</div>
-    <div class="grid-inputs">
-        <div class="input-group">
-            <label>HKP + X (Measured)</label>
-            <input type="number" id="HKPX" placeholder="mm" oninput="calculate()">
-        </div>
-        <div class="input-group">
-            <label>X (Offset)</label>
-            <input type="number" id="X" placeholder="mm" oninput="calculate()">
-        </div>
-        <div class="input-group">
-            <label>HPH (Buffer Stroke)</label>
-            <input type="number" id="HPH" placeholder="mm" oninput="calculate()">
-        </div>
-        <div class="input-group">
-            <label>HSG (ความลึกของก้นบ่อลิฟท์)</label>
-            <input type="number" id="HSG" placeholder="mm" oninput="calculate()">
-        </div>
-    </div>
+    <div class="section-title">ข้อมูลพื้นฐาน (PRIMARY DATA)</div>
+    <div class="input-group"><label>HKP + X (Measured)</label><input type="number" id="HKPX" oninput="calculate()"></div>
+    <div class="input-group"><label>X (Offset)</label><input type="number" id="X" oninput="calculate()"></div>
+    <div class="input-group"><label>HPH (Buffer Stroke)</label><input type="number" id="HPH" oninput="calculate()"></div>
 
-    <div class="section-title">SAFETY CLEARANCE (A, E, F, G)</div>
-    <div class="grid-inputs">
-        <div class="input-group">
-            <label>A (ระยะกระบังซิลประตูในวัดถึงผนังปล่อง)</label>
-            <input type="number" id="A" placeholder="mm" oninput="calculate()">
-        </div>
-        <div class="input-group">
-            <label>E (ระยะจากGuild shoeหรือRollerวัดถึงพื้นก้นบ่อหรือส่วนที่จะชน)</label>
-            <input type="number" id="E" placeholder="mm" oninput="calculate()">
-        </div>
-        <div class="input-group">
-            <label>F (ระยะจาขอบกระบังซิลประตูในวัดถึงพื้นก้นบ่อหรือส่วนที่จะชน)</label>
-            <input type="number" id="F" placeholder="mm" oninput="calculate()">
-        </div>
-        <div class="input-group">
-            <label>G (ระยะส่วนที่ต่ำสุดของพื้นตู้ลิฟท์วัดถึงพื้นก้นบ่อ)</label>
-            <input type="number" id="G" placeholder="mm" oninput="calculate()">
-        </div>
-    </div>
+    <div class="section-title">ระยะความปลอดภัย (SAFETY POINTS)</div>
+    <div class="input-group"><label>A (Apron to Wall)</label><input type="number" id="A" oninput="calculate()"></div>
+    <div class="input-group"><label>E (Highest Part)</label><input type="number" id="E" oninput="calculate()"></div>
+    <div class="input-group"><label>F (Floor to Apron)</label><input type="number" id="F" oninput="calculate()"></div>
+    <div class="input-group"><label>G (Lowest Part)</label><input type="number" id="G" oninput="calculate()"></div>
 
-    <div class="result-panel" id="resPanel">
-        <div class="res-row">
-            <span class="res-label">HKP (ระยะรันบายลิฟท์ที่คำนวณได้):</span>
-            <span class="res-val" id="outHKP">-</span>
-        </div>
-        <div class="res-row">
-            <span class="res-label">Total Y:</span>
-            <span class="res-val" id="outY">-</span>
-        </div>
-        <div class="res-row" style="flex-direction: column; align-items: flex-start;">
-            <div style="display: flex; justify-content: space-between; width: 100%;">
-                <span class="res-label">E - Y (Min 300):</span>
-                <span class="res-val" id="outEY">-</span>
+    <div class="result-panel">
+        <div class="res-item">
+            <div class="res-header">
+                <span class="res-label">HKP (Real Distance):</span>
+                <span class="res-value" id="outHKP">-</span>
             </div>
-            <span id="mE" class="margin-tag"></span>
-        </div>
-        <div class="res-row" style="flex-direction: column; align-items: flex-start;">
-            <div style="display: flex; justify-content: space-between; width: 100%;">
-                <span class="res-label">G - Y (Min 500):</span>
-                <span class="res-val" id="outGY">-</span>
-            </div>
-            <span id="mG" class="margin-tag"></span>
         </div>
 
-        <div class="analysis-card" id="guardCard">
-            <div class="analysis-text" id="guardResult">กรุณากรอกข้อมูลระยะ A และ F...</div>
+        <div class="res-item">
+            <div class="res-header">
+                <span class="res-label">Total Y (HKPX + HPH):</span>
+                <span class="res-value" id="outY">-</span>
+            </div>
+        </div>
+
+        <div class="res-item">
+            <div class="res-header">
+                <span class="res-label">E - Y (Target ≥ 300):</span>
+                <span class="res-value" id="outEY">-</span>
+            </div>
+            <div class="res-footer"><span id="mE" class="tag"></span></div>
+        </div>
+
+        <div class="res-item">
+            <div class="res-header">
+                <span class="res-label">G - Y (Target ≥ 500):</span>
+                <span class="res-value" id="outGY">-</span>
+            </div>
+            <div class="res-footer"><span id="mG" class="tag"></span></div>
+        </div>
+
+        <div class="res-item" style="border-bottom: none;">
+            <div class="res-header">
+                <span class="res-label">F - Y (Guarding Check):</span>
+                <span class="res-value" id="outFY">-</span>
+            </div>
+            <div class="res-footer"><span id="mF" class="tag"></span></div>
+        </div>
+
+        <div class="analysis-box" id="analysisBox">
+            <div class="analysis-text" id="guardResult">รอข้อมูลการคำนวณ...</div>
         </div>
     </div>
 
     <div class="formula-info">
-        <strong>เกณฑ์ตรวจสอบสำคัญ:</strong>
+        <b>Acceptance Criteria:</b>
         <ul>
-            <li>HKP = (HKP+X) - X</li>
-            <li>Total Y = (HKP+X) + HPH</li>
+            <li>HKP: ตาม Layout (0/-5 mm)</li>
             <li>E-Y ≥ 300 mm</li>
             <li>G-Y ≥ 500 mm</li>
         </ul>
@@ -169,39 +152,39 @@ function calculate() {
     document.getElementById('outHKP').innerText = hkp.toFixed(1) + " mm";
     document.getElementById('outY').innerText = y.toFixed(1) + " mm";
 
-    // Update UI Function
-    const update = (val, target, outId, mId) => {
+    const updateUI = (val, target, outId, mId) => {
         const el = document.getElementById(outId);
         const mEl = document.getElementById(mId);
         const isPass = val >= target;
         el.innerText = val.toFixed(1) + " mm";
-        el.className = "res-val " + (isPass ? "pass" : "fail");
+        el.className = "res-value " + (isPass ? "pass" : "fail");
         mEl.innerText = isPass ? "✓ เหลือ +" + (val-target).toFixed(1) : "✗ ขาด " + Math.abs(val-target).toFixed(1);
-        mEl.className = "margin-tag " + (isPass ? "pass" : "fail");
+        mEl.className = "tag " + (isPass ? "pass-tag" : "fail-tag");
         return isPass;
     };
 
-    const okE = update(ey, 300, 'outEY', 'mE');
-    const okG = update(gy, 500, 'outGY', 'mG');
+    updateUI(ey, 300, 'outEY', 'mE');
+    updateUI(gy, 500, 'outGY', 'mG');
 
-    // Guarding Analysis
+    // วิเคราะห์หน้าปล่อง
     let fTarget = 30;
-    let msg = "";
+    let guardMsg = "";
     if (a > 150) {
         fTarget = 500;
-        msg = (fy >= 500) ? "✅ ไม่ต้องทำที่กั้นหน้าปล่อง" : "❌ FAIL: ระยะ F-Y ไม่พอ (ต้องมี 500)";
+        guardMsg = (fy >= 500) ? "✅ ไม่ต้องทำที่กั้นหน้าปล่อง" : "❌ FAIL: ระยะ F-Y ไม่พอ (ต้องการ 500)";
     } else if (a > 35) {
         fTarget = 100;
-        msg = (fy >= 100) ? "⚠️ จะต้องทำที่กั้นหน้าปล่อง" : "❌ FAIL: ระยะ F-Y ไม่พอ (ต้องมี 100)";
+        guardMsg = (fy >= 100) ? "⚠️ จะต้องทำที่กั้นหน้าปล่อง" : "❌ FAIL: ระยะ F-Y ไม่พอ (ต้องการ 100)";
     } else {
         fTarget = 30;
-        msg = (fy >= 30) ? "⚠️ จะต้องทำที่กั้นหน้าปล่อง" : "❌ FAIL: ระยะ F-Y ไม่พอ (ต้องมี 30)";
+        guardMsg = (fy >= 30) ? "⚠️ จะต้องทำที่กั้นหน้าปล่อง" : "❌ FAIL: ระยะ F-Y ไม่พอ (ต้องการ 30)";
     }
 
+    const isFPass = updateUI(fy, fTarget, 'outFY', 'mF');
     const gRes = document.getElementById('guardResult');
-    gRes.innerText = (hkpx === 0) ? "รอข้อมูล..." : msg;
-    gRes.className = "analysis-text " + (fy >= fTarget ? "pass" : "fail");
-    document.getElementById('guardCard').style.borderColor = (fy >= fTarget) ? "#2ecc71" : "#e00000";
+    gRes.innerText = (hkpx === 0) ? "รอข้อมูล..." : guardMsg;
+    gRes.className = "analysis-text " + (isFPass ? "pass" : "fail");
+    document.getElementById('analysisBox').style.borderColor = isFPass ? "#2ecc71" : "#e00000";
 }
 </script>
 
