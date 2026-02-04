@@ -16,7 +16,6 @@
         
         .section-title { font-size: 0.95rem; font-weight: bold; color: #e00000; margin: 20px 0 10px 0; border-left: 4px solid #e00000; padding-left: 10px; background: #fdf2f2; padding-top: 5px; padding-bottom: 5px; }
 
-        /* ปรับ Input ให้เรียงแถวเดียวและใหญ่ขึ้น */
         .input-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 1rem; color: #555; }
         input { 
@@ -31,7 +30,6 @@
         }
         input:focus { border-color: #e00000; outline: none; background: #fff8f8; }
 
-        /* ผลลัพธ์แบบแยกทีละบรรทัด */
         .result-panel { background: #1a1a1a; color: #fff; padding: 15px; border-radius: 10px; margin-top: 20px; }
         .res-item { 
             display: block; 
@@ -40,8 +38,8 @@
             border-bottom: 1px solid #333; 
         }
         .res-header { display: flex; justify-content: space-between; align-items: center; }
-        .res-label { font-size: 0.9rem; color: #aaa; }
-        .res-value { font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.3rem; color: #fff; }
+        .res-label { font-size: 0.9rem; color: #aaa; padding-right: 10px; }
+        .res-value { font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.3rem; color: #fff; white-space: nowrap; }
         .res-footer { display: flex; justify-content: flex-end; margin-top: 4px; }
 
         .tag { font-size: 0.85rem; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
@@ -50,9 +48,9 @@
         .pass-tag { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
         .fail-tag { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; }
 
-        /* กล่องวิเคราะห์พิเศษ */
-        .analysis-box { background: #fff; color: #333; padding: 15px; border-radius: 8px; margin-top: 15px; border: 2px solid #eee; text-align: center; }
-        .analysis-text { font-size: 1.1rem; font-weight: bold; }
+        .analysis-box { background: #fff; color: #333; padding: 15px; border-radius: 8px; margin-top: 15px; border: 3px solid #eee; text-align: center; }
+        .analysis-title { font-size: 0.9rem; color: #666; margin-bottom: 8px; font-weight: bold; }
+        .analysis-text { font-size: 1.1rem; font-weight: bold; line-height: 1.5; }
 
         .formula-info { font-size: 0.8rem; color: #888; margin-top: 20px; background: #fff; padding: 10px; border: 1px dashed #ccc; border-radius: 6px; }
     </style>
@@ -66,36 +64,37 @@
         <img src="image/layout-pit.jpeg" alt="Pit Layout Diagram">
     </div>
 
-    <div class="section-title">ใส่ค่า (X,HKP+X,HPHK)</div>
- <div class="input-group"><label>X (ระยะลิฟต์จอดไม่เสมอชั้น ค่าต้องไม่เป็น0ลิฟต์ต้องไม่Normalเสมอชั้น)</label><input type="number" id="X" oninput="calculate()"></div>
-    <div class="input-group"><label>HKP + X (ระยะจากบัฟเฟอร์ลิฟต์วัดถึงเพลทบัฟเฟอร์ใต้ตู้ลิฟต์)</label><input type="number" id="HKPX" oninput="calculate()"></div>
-    
-    <div class="input-group"><label>HPHK (Buffer Stroke ระยะยุบของบัฟเฟอร์ลิฟต์ ดูจากแบบติดตั้งหรือค่าstrokeบนเนมเพลทบัฟเฟอร์ลิฟต์)</label><input type="number" id="HPH" oninput="calculate()"></div>
+    <div class="section-title">ใส่ค่า (X, HKP+X, HPHK)</div>
+    <div class="input-group">
+        <label>X (ระยะลิฟต์จอดไม่เสมอชั้น *ค่าต้องไม่เป็น 0)</label>
+        <input type="number" id="X" placeholder="mm" oninput="calculate()">
+    </div>
+    <div class="input-group">
+        <label>HKP + X (ระยะจากบัฟเฟอร์ถึงเพลทใต้ตู้ลิฟต์)</label>
+        <input type="number" id="HKPX" placeholder="mm" oninput="calculate()">
+    </div>
+    <div class="input-group">
+        <label>HPHK (Buffer Stroke ตามเนมเพลท/แบบ)</label>
+        <input type="number" id="HPH" placeholder="mm" oninput="calculate()">
+    </div>
 
-    <div class="section-title">ระยะปลอดภัย (safety clearance )</div>
-    <div class="input-group"><label>A (ระยะขอบกระบังซิลประตูในวัดถึงผนังปล่อง)</label><input type="number" id="A" oninput="calculate()"></div>
-    <div class="input-group"><label>E (ระยะจากGuild shoeหรือRollerวัดถึงพื้นก้นบ่อหรือส่วนที่จะชน)</label>
-            <input type="number" id="E" placeholder="mm" oninput="calculate()">
-        </div>
-        <div class="input-group">
-            <label>F (ระยะจาขอบกระบังซิลประตูในวัดถึงพื้นก้นบ่อหรือส่วนที่จะชน)</label>
-            <input type="number" id="F" placeholder="mm" oninput="calculate()">
-        </div>
-        <div class="input-group">
-            <label>G (ระยะส่วนที่ต่ำสุดของพื้นตู้ลิฟท์วัดถึงพื้นก้นบ่อ)</label>
-            <input type="number" id="G" placeholder="mm" oninput="calculate()"></div>
+    <div class="section-title">ระยะปลอดภัย (Safety Clearance)</div>
+    <div class="input-group"><label>A (ระยะขอบกระบังซิลประตูในถึงผนังปล่อง)</label><input type="number" id="A" oninput="calculate()"></div>
+    <div class="input-group"><label>E (จาก Guide shoe/Roller ถึงพื้นบ่อ)</label><input type="number" id="E" placeholder="mm" oninput="calculate()"></div>
+    <div class="input-group"><label>F (จากขอบกระบังซิลประตูในถึงพื้นบ่อ)</label><input type="number" id="F" placeholder="mm" oninput="calculate()"></div>
+    <div class="input-group"><label>G (ส่วนที่ต่ำที่สุดของพื้นตู้ลิฟต์ถึงพื้นบ่อ)</label><input type="number" id="G" placeholder="mm" oninput="calculate()"></div>
 
     <div class="result-panel">
         <div class="res-item">
             <div class="res-header">
-                <span class="res-label">HKP รันบายลิฟต์ตามแบบติดตั้ง(0/-5 mm):</span>
+                <span class="res-label">HKP (เป้าหมาย 0/-5 mm):</span>
                 <span class="res-value" id="outHKP">-</span>
             </div>
         </div>
 
         <div class="res-item">
             <div class="res-header">
-                <span class="res-label">Total Y (HKP+X+HPHK):</span>
+                <span class="res-label">Total Y (HKPX + HPHK):</span>
                 <span class="res-value" id="outY">-</span>
             </div>
         </div>
@@ -118,36 +117,23 @@
 
         <div class="res-item" style="border-bottom: none;">
             <div class="res-header">
-                <span class="res-label">F - Y (ต้องการตามเงื่อนไขระยะA) 
-หาก A > 150 mm และ F - Y \geq 500 mm \rightarrow "ไม่ต้องทำที่กั้นหน้าปล่อง"
-
-​หาก 35 < A \leq 150 mm และ F - Y \geq 100 mm \rightarrow "จะต้องทำที่กั้นหน้าปล่อง"
-
-​หาก A \leq 35 mm และ F - Y \geq 30 mm \rightarrow "จะต้องทำที่กั้นหน้าปล่อง"
-
-
-
-
-
-
-
-:</span>
+                <span class="res-label">F - Y (Measured):</span>
                 <span class="res-value" id="outFY">-</span>
             </div>
-            <div class="res-footer"><span id="mF" class="tag"></span></div>
         </div>
 
         <div class="analysis-box" id="analysisBox">
-            <div class="analysis-text" id="guardResult">รอข้อมูลการคำนวณ...</div>
+            <div class="analysis-title">วิเคราะห์ความปลอดภัยระยะ A (Guarding):</div>
+            <div id="guardResult" class="analysis-text">รอข้อมูลการคำนวณ...</div>
         </div>
     </div>
 
     <div class="formula-info">
         <b>Acceptance Criteria:</b>
         <ul>
-            <li>HKP รันบายลิฟต์ตามแบบติดตั้ง(0/-5 mm)</li>
-            <li>E-Y ≥ 300 mm</li>
-            <li>G-Y ≥ 500 mm</li>
+            <li>HKP รันบายลิฟต์ตามแบบติดตั้ง (0/-5 mm)</li>
+            <li>E-Y ≥ 300 mm | G-Y ≥ 500 mm</li>
+            <li>Guarding: วิเคราะห์ตามระยะ A และ F-Y</li>
         </ul>
     </div>
 </div>
@@ -167,8 +153,8 @@ function calculate() {
     const hkp = hkpx - x;
     const y = hkpx + hph;
     const ey = e - y;
-    const fy = f - y;
     const gy = g - y;
+    const fy = f - y;
 
     document.getElementById('outHKP').innerText = hkp.toFixed(1) + " mm";
     document.getElementById('outY').innerText = y.toFixed(1) + " mm";
@@ -186,26 +172,49 @@ function calculate() {
 
     updateUI(ey, 300, 'outEY', 'mE');
     updateUI(gy, 500, 'outGY', 'mG');
+    document.getElementById('outFY').innerText = fy.toFixed(1) + " mm";
 
-    // วิเคราะห์หน้าปล่อง
-    let fTarget = 30;
+    // --- Logic วิเคราะห์หน้าปล่อง โดยใช้ F-Y กำหนดเกณฑ์ระยะ A ---
+    const gRes = document.getElementById('guardResult');
+    const aBox = document.getElementById('analysisBox');
     let guardMsg = "";
-    if (a > 150) {
-        fTarget = 500;
-        guardMsg = (fy >= 500) ? "✅ ไม่ต้องทำที่กั้นหน้าปล่อง" : "❌ FAIL: ระยะ F-Y ไม่พอ (ต้องการ 500)";
-    } else if (a > 35) {
-        fTarget = 100;
-        guardMsg = (fy >= 100) ? "⚠️ จะต้องทำที่กั้นหน้าปล่อง" : "❌ FAIL: ระยะ F-Y ไม่พอ (ต้องการ 100)";
+    let statusClass = "pass";
+
+    if (hkpx === 0 || f === 0) {
+        guardMsg = "รอข้อมูลการคำนวณ...";
     } else {
-        fTarget = 30;
-        guardMsg = (fy >= 30) ? "⚠️ จะต้องทำที่กั้นหน้าปล่อง" : "❌ FAIL: ระยะ F-Y ไม่พอ (ต้องการ 30)";
+        // กรณีที่ 1: ถ้า F-Y สูงพออยู่แล้ว (>= 500)
+        if (fy >= 500) {
+            guardMsg = "✅ ระยะ A ยอมรับได้เลย<br><span style='font-size:0.85rem; color:#666;'>(ไม่ต้องทำที่กั้นหน้าปล่อง)</span>";
+        } 
+        // กรณีที่ 2: ถ้า F-Y อยู่ระหว่าง 100 - 499
+        else if (fy >= 100) {
+            if (a <= 150) {
+                guardMsg = "✅ ระยะ A ปลอดภัย<br><span style='font-size:0.85rem; color:#666;'>(จะต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y < 500)</span>";
+            } else {
+                guardMsg = "⚠️ ต้องทำที่กั้นหน้าปล่อง<br><span style='font-size:0.85rem; color:#e00000;'>เพื่อให้ระยะ A ≤ 150 mm</span>";
+                statusClass = "fail";
+            }
+        } 
+        // กรณีที่ 3: ถ้า F-Y อยู่ระหว่าง 30 - 99
+        else if (fy >= 30) {
+            if (a <= 35) {
+                guardMsg = "✅ ระยะ A ปลอดภัย<br><span style='font-size:0.85rem; color:#666;'>(จะต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y < 100)</span>";
+            } else {
+                guardMsg = "⚠️ ต้องทำที่กั้นหน้าปล่อง<br><span style='font-size:0.85rem; color:#e00000;'>เพื่อให้ระยะ A ≤ 35 mm</span>";
+                statusClass = "fail";
+            }
+        }
+        // กรณีที่ 4: F-Y ต่ำกว่า 30 mm
+        else {
+            guardMsg = "❌ FAIL: ระยะ F-Y ต่ำเกินไป<br><span style='font-size:0.85rem;'>ไม่สามารถใช้การกั้นปล่องแก้ไขได้</span>";
+            statusClass = "fail";
+        }
     }
 
-    const isFPass = updateUI(fy, fTarget, 'outFY', 'mF');
-    const gRes = document.getElementById('guardResult');
-    gRes.innerText = (hkpx === 0) ? "รอข้อมูล..." : guardMsg;
-    gRes.className = "analysis-text " + (isFPass ? "pass" : "fail");
-    document.getElementById('analysisBox').style.borderColor = isFPass ? "#2ecc71" : "#e00000";
+    gRes.innerHTML = guardMsg;
+    gRes.className = "analysis-text " + statusClass;
+    aBox.style.borderColor = (statusClass === "pass") ? "#2ecc71" : "#e00000";
 }
 </script>
 
