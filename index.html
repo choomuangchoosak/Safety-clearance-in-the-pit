@@ -60,41 +60,49 @@
 <body>
 
 <div class="card">
-    <h2>ES1/ES5.0 Pit Analyzer <span class="version">Rel. 02 EN 81-1</span></h2>
+    <h2> Safety clearance in the pit <span class="version">(ES1/ES5.0/ES5 Rel. 02 EN 81-1)</span></h2>
 
     <div class="diagram-container">
         <img src="image/layout-pit.jpeg" alt="Pit Layout Diagram">
     </div>
 
-    <div class="section-title">ข้อมูลพื้นฐาน (PRIMARY DATA)</div>
-    <div class="input-group"><label>HKP + X (Measured)</label><input type="number" id="HKPX" oninput="calculate()"></div>
-    <div class="input-group"><label>X (Offset)</label><input type="number" id="X" oninput="calculate()"></div>
-    <div class="input-group"><label>HPH (Buffer Stroke)</label><input type="number" id="HPH" oninput="calculate()"></div>
+    <div class="section-title">ใส่ค่า (X,HKP+X,HPHK)</div>
+ <div class="input-group"><label>X (ระยะลิฟต์จอดไม่เสมอชั้น ค่าต้องไม่เป็น0ลิฟต์ต้องไม่Normalเสมอชั้น)</label><input type="number" id="X" oninput="calculate()"></div>
+    <div class="input-group"><label>HKP + X (ระยะจากบัฟเฟอร์ลิฟต์วัดถึงเพลทบัฟเฟอร์ใต้ตู้ลิฟต์)</label><input type="number" id="HKPX" oninput="calculate()"></div>
+    
+    <div class="input-group"><label>HPHK (Buffer Stroke ระยะยุบของบัฟเฟอร์ลิฟต์ ดูจากแบบติดตั้งหรือค่าstrokeบนเนมเพลทบัฟเฟอร์ลิฟต์)</label><input type="number" id="HPH" oninput="calculate()"></div>
 
-    <div class="section-title">ระยะความปลอดภัย (SAFETY POINTS)</div>
-    <div class="input-group"><label>A (Apron to Wall)</label><input type="number" id="A" oninput="calculate()"></div>
-    <div class="input-group"><label>E (Highest Part)</label><input type="number" id="E" oninput="calculate()"></div>
-    <div class="input-group"><label>F (Floor to Apron)</label><input type="number" id="F" oninput="calculate()"></div>
-    <div class="input-group"><label>G (Lowest Part)</label><input type="number" id="G" oninput="calculate()"></div>
+    <div class="section-title">ระยะปลอดภัย (safety clearance )</div>
+    <div class="input-group"><label>A (ระยะขอบกระบังซิลประตูในวัดถึงผนังปล่อง)</label><input type="number" id="A" oninput="calculate()"></div>
+    <div class="input-group"><label>E (ระยะจากGuild shoeหรือRollerวัดถึงพื้นก้นบ่อหรือส่วนที่จะชน)</label>
+            <input type="number" id="E" placeholder="mm" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>F (ระยะจาขอบกระบังซิลประตูในวัดถึงพื้นก้นบ่อหรือส่วนที่จะชน)</label>
+            <input type="number" id="F" placeholder="mm" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>G (ระยะส่วนที่ต่ำสุดของพื้นตู้ลิฟท์วัดถึงพื้นก้นบ่อ)</label>
+            <input type="number" id="G" placeholder="mm" oninput="calculate()"></div>
 
     <div class="result-panel">
         <div class="res-item">
             <div class="res-header">
-                <span class="res-label">HKP (Real Distance):</span>
+                <span class="res-label">HKP รันบายลิฟต์ตามแบบติดตั้ง(0/-5 mm):</span>
                 <span class="res-value" id="outHKP">-</span>
             </div>
         </div>
 
         <div class="res-item">
             <div class="res-header">
-                <span class="res-label">Total Y (HKPX + HPH):</span>
+                <span class="res-label">Total Y (HKP+X+HPHK):</span>
                 <span class="res-value" id="outY">-</span>
             </div>
         </div>
 
         <div class="res-item">
             <div class="res-header">
-                <span class="res-label">E - Y (Target ≥ 300):</span>
+                <span class="res-label">E - Y (ต้องการ ≥ 300):</span>
                 <span class="res-value" id="outEY">-</span>
             </div>
             <div class="res-footer"><span id="mE" class="tag"></span></div>
@@ -102,7 +110,7 @@
 
         <div class="res-item">
             <div class="res-header">
-                <span class="res-label">G - Y (Target ≥ 500):</span>
+                <span class="res-label">G - Y (ต้องการ ≥ 500):</span>
                 <span class="res-value" id="outGY">-</span>
             </div>
             <div class="res-footer"><span id="mG" class="tag"></span></div>
@@ -110,7 +118,20 @@
 
         <div class="res-item" style="border-bottom: none;">
             <div class="res-header">
-                <span class="res-label">F - Y (Guarding Check):</span>
+                <span class="res-label">F - Y (ต้องการตามเงื่อนไขระยะA) 
+หาก A > 150 mm และ F - Y \geq 500 mm \rightarrow "ไม่ต้องทำที่กั้นหน้าปล่อง"
+
+​หาก 35 < A \leq 150 mm และ F - Y \geq 100 mm \rightarrow "จะต้องทำที่กั้นหน้าปล่อง"
+
+​หาก A \leq 35 mm และ F - Y \geq 30 mm \rightarrow "จะต้องทำที่กั้นหน้าปล่อง"
+
+
+
+
+
+
+
+:</span>
                 <span class="res-value" id="outFY">-</span>
             </div>
             <div class="res-footer"><span id="mF" class="tag"></span></div>
@@ -124,7 +145,7 @@
     <div class="formula-info">
         <b>Acceptance Criteria:</b>
         <ul>
-            <li>HKP: ตาม Layout (0/-5 mm)</li>
+            <li>HKP รันบายลิฟต์ตามแบบติดตั้ง(0/-5 mm)</li>
             <li>E-Y ≥ 300 mm</li>
             <li>G-Y ≥ 500 mm</li>
         </ul>
