@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schindler Pit Analyzer - Mobile Pro</title>
+    <title>Safety clearance in the Pit </title>
     <style>
         /* Base Setup */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 10px; background-color: #f0f2f5; color: #333; }
@@ -60,12 +60,12 @@
 
 <div class="card">
     <h2>
-        ES1/ES5.0 Pit Analyzer
-        <span class="version">Rel. 02 EN 81-1</span>
+     Safety clearance in the Pit 
+        <span class="version">ES1/ES5.0/ES5 Rel. 02 EN 81-1</span>
     </h2>
 
     <div class="diagram-container">
-        <img src="image/layout-pit.jpeg" alt="Pit Layout Diagram">
+        <img src="image/layout-pit.jpeg" alt="layout-pit.jpeg">
     </div>
 
     <div class="section-title">PRIMARY DATA</div>
@@ -83,34 +83,34 @@
             <input type="number" id="HPH" placeholder="mm" oninput="calculate()">
         </div>
         <div class="input-group">
-            <label>HSG (Layout Depth)</label>
+            <label>HSG (ความลึกของก้นบ่อลิฟท์)</label>
             <input type="number" id="HSG" placeholder="mm" oninput="calculate()">
         </div>
     </div>
 
-    <div class="section-title">SAFETY CLEARANCE (E, F, G, A)</div>
+    <div class="section-title">SAFETY CLEARANCE (A, E, F, G)</div>
     <div class="grid-inputs">
         <div class="input-group">
-            <label>A (Apron to Wall)</label>
+            <label>A (ระยะกระบังซิลประตูในวัดถึงผนังปล่อง)</label>
             <input type="number" id="A" placeholder="mm" oninput="calculate()">
         </div>
         <div class="input-group">
-            <label>E (Highest Part)</label>
+            <label>E (ระยะจากGuild shoeหรือRollerวัดถึงพื้นก้นบ่อหรือส่วนที่จะชน)</label>
             <input type="number" id="E" placeholder="mm" oninput="calculate()">
         </div>
         <div class="input-group">
-            <label>F (Floor to Apron)</label>
+            <label>F (ระยะจาขอบกระบังซิลประตูในวัดถึงพื้นก้นบ่อหรือส่วนที่จะชน)</label>
             <input type="number" id="F" placeholder="mm" oninput="calculate()">
         </div>
         <div class="input-group">
-            <label>G (Lowest Part)</label>
+            <label>G (ระยะส่วนที่ต่ำสุดของพื้นตู้ลิฟท์วัดถึงพื้นก้นบ่อ)</label>
             <input type="number" id="G" placeholder="mm" oninput="calculate()">
         </div>
     </div>
 
     <div class="result-panel" id="resPanel">
         <div class="res-row">
-            <span class="res-label">HKP (Real):</span>
+            <span class="res-label">HKP (ระยะรันบายลิฟท์ที่คำนวณได้):</span>
             <span class="res-val" id="outHKP">-</span>
         </div>
         <div class="res-row">
