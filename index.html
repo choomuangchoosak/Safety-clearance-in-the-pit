@@ -117,7 +117,7 @@
 
         <div class="res-item" style="border-bottom: none;">
             <div class="res-header">
-                <span class="res-label">F - Y (Measured):</span>
+                <span class="res-label">F - Y (ตามเงื่อนไขข้อกำหนดแต่ไม่น้อยกว่า30mm):</span>
                 <span class="res-value" id="outFY">-</span>
             </div>
         </div>
@@ -132,8 +132,9 @@
         <b>Acceptance Criteria:</b>
         <ul>
             <li>HKP รันบายลิฟต์ตามแบบติดตั้ง (0/-5 mm)</li>
-            <li>E-Y ≥ 300 mm | G-Y ≥ 500 mm</li>
-            <li>ทำที่กั้นหน้าปล่อง วิเคราะห์ตามระยะ A และ F-Y</li>
+            <li>ระยะ E-Y มากกว่กกว่าหรือเท่ากับ 300 mm | G-Y มากกว่าหรือเท่ากับ 500 mm</li>
+            <li>ระยะ A และ F-Y ตามเงื่อนไง </li>
+<li>Acceptance criteria: If distance A > 150 mm: F-Y ≥ 500 mm If distance A >35 ... 150 mm: F-Y ≥ 100 mm / If distance A ≤35 mm: F-Y ≥ 30 mm</li>
         </ul>
     </div>
 
@@ -187,16 +188,16 @@ function calculate() {
     let statusClass = "pass";
 
     if (hkpx === 0 || f === 0) {
-        guardMsg = "รอข้อมูลการคำนวณ...";
+        guardMsg = "รอข้อมูลการคำนวณHPK+X+HPH...";
     } else {
         // กรณีที่ 1: ถ้า F-Y สูงพออยู่แล้ว (>= 500)
         if (fy >= 500) {
-            guardMsg = "✅ ระยะ A ผ่าน<br><span style='font-size:0.85rem; color:#666;'>(ไม่ต้องทำที่กั้นหน้าปล่อง)</span>";
+            guardMsg = "✅ ระยะ A ผ่าน<br><span style='font-size:0.85rem; color:#666;'>(ไม่ต้องทำที่กั้นหน้าปล่อง เพราะ F-Y มากกว่า หรือเท่ากับ 500mm)</span>";
         } 
         // กรณีที่ 2: ถ้า F-Y อยู่ระหว่าง 100 - 499
         else if (fy >= 100) {
             if (a <= 150) {
-                guardMsg = "✅ ระยะ A ผ่าน<br><span style='font-size:0.85rem; color:#666;'>(ไม่ต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y มากกว่100 แต่ไม่เกิน 500)</span>";
+                guardMsg = "✅ ระยะ A ผ่าน<br><span style='font-size:0.85rem; color:#666;'>(ไม่ต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y มากกว่า 100 แต่ไม่เกิน 500 mm)</span>";
             } else {
                 guardMsg = "⚠️ ต้องทำที่กั้นหน้าปล่อง<br><span style='font-size:0.85rem; color:#e00000;'>เพื่อให้ระยะ A น้อยกว่าหรือเท่ากับ 150 mm</span>";
                 statusClass = "fail";
@@ -205,7 +206,7 @@ function calculate() {
         // กรณีที่ 3: ถ้า F-Y อยู่ระหว่าง 30 - 99
         else if (fy >= 30) {
             if (a <= 35) {
-                guardMsg = "✅ ระยะ A ผ่าน<br><span style='font-size:0.85rem; color:#666;'>(ไม่ต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y มากกว่า30-100mm)</span>";
+                guardMsg = "✅ ระยะ A ผ่าน<br><span style='font-size:0.85rem; color:#666;'>(ไม่ต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y มากกว่า30-99mm)</span>";
             } else {
                 guardMsg = "⚠️ ต้องทำที่กั้นหน้าปล่อง<br><span style='font-size:0.85rem; color:#e00000;'>เพื่อให้ระยะ A น้อยกว่าหรือเท่ากับ 35 mm</span>";
                 statusClass = "fail";
