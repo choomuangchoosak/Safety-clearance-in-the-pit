@@ -196,24 +196,24 @@ function calculate() {
         // กรณีที่ 2: ถ้า F-Y อยู่ระหว่าง 100 - 499
         else if (fy >= 100) {
             if (a <= 150) {
-                guardMsg = "✅ ระยะ A ผ่าน<br><span style='font-size:0.85rem; color:#666;'>(จะต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y < 500)</span>";
+                guardMsg = "✅ ระยะ A ผ่าน<br><span style='font-size:0.85rem; color:#666;'>(ไม่ต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y มากกว่100 แต่ไม่เกิน 500)</span>";
             } else {
-                guardMsg = "⚠️ ต้องทำที่กั้นหน้าปล่อง<br><span style='font-size:0.85rem; color:#e00000;'>เพื่อให้ระยะ A ≤ 150 mm</span>";
+                guardMsg = "⚠️ ต้องทำที่กั้นหน้าปล่อง<br><span style='font-size:0.85rem; color:#e00000;'>เพื่อให้ระยะ A น้อยกว่าหรือเท่ากับ 150 mm</span>";
                 statusClass = "fail";
             }
         } 
         // กรณีที่ 3: ถ้า F-Y อยู่ระหว่าง 30 - 99
         else if (fy >= 30) {
             if (a <= 35) {
-                guardMsg = "✅ ระยะ A ปลอดภัย<br><span style='font-size:0.85rem; color:#666;'>(จะต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y < 100)</span>";
+                guardMsg = "✅ ระยะ A ผ่าน<br><span style='font-size:0.85rem; color:#666;'>(ไม่ต้องทำที่กั้นหน้าปล่องเนื่องจาก F-Y มากกว่า30-100mm)</span>";
             } else {
-                guardMsg = "⚠️ ต้องทำที่กั้นหน้าปล่อง<br><span style='font-size:0.85rem; color:#e00000;'>เพื่อให้ระยะ A ≤ 35 mm</span>";
+                guardMsg = "⚠️ ต้องทำที่กั้นหน้าปล่อง<br><span style='font-size:0.85rem; color:#e00000;'>เพื่อให้ระยะ A น้อยกว่าหรือเท่ากับ 35 mm</span>";
                 statusClass = "fail";
             }
         }
         // กรณีที่ 4: F-Y ต่ำกว่า 30 mm
         else {
-            guardMsg = "❌ FAIL: ระยะ F-Y ต่ำเกินไป<br><span style='font-size:0.85rem;'>ไม่สามารถใช้การกั้นปล่องแก้ไขได้</span>";
+            guardMsg = "❌ FAIL: ระยะ F-Y ต่ำเกินไป<br><span style='font-size:0.85rem;'>ระยะFไม่ผ่าน ไม่สามารถใช้การกั้นปล่องแก้ไขได้ เพราะ F-Y ต่ำกว่า 30 mm</span>";
             statusClass = "fail";
         }
     }
